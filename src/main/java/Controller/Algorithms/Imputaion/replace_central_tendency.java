@@ -54,7 +54,7 @@ public class replace_central_tendency {
             {
                 IntColumn temp = (IntColumn) data.column(column.name());
                 median.add(column.median());
-                Column<Integer> temp_col = temp.setMissingTo(Integer.valueOf(String.format("%.40f", column.median())));
+                Column<Integer> temp_col = temp.setMissingTo((int) column.median());
                 data.replaceColumn(column.name(),temp_col);
             }
 

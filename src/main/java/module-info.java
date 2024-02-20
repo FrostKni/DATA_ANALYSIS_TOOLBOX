@@ -11,6 +11,8 @@ module org.analyze.main {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires tablesaw.core;
+    requires java.desktop;
+    requires javafx.swing;
 
     opens org.analyze.main to javafx.fxml;
     exports org.analyze.main;

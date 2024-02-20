@@ -21,7 +21,7 @@ public class Dialog_HistogramController {
     @FXML
     private TextField interval;
 
-    int  interval_size=1;
+    int  interval_size;
     String column_name;
 
     Table table;
@@ -41,7 +41,11 @@ public class Dialog_HistogramController {
     @FXML
     void  Submit(MouseEvent event) {
         if(!interval.isDisable()) {
-            interval_size = Integer.parseInt(this.interval.getText());
+            try {
+                interval_size = Integer.parseInt(this.interval.getText());
+            } catch (NumberFormatException e) {
+                interval_size = 5;
+            }
         }
         column_name = column.getValue();
         //close the dialog

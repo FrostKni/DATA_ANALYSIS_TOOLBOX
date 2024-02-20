@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="328.0" prefWidth="436.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.onehotencoding_dialog">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="328.0" prefWidth="436.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.frequencyencoding_dialog">
    <Label layoutX="163.0" layoutY="31.0" prefHeight="20.0" prefWidth="112.0" text="Column Name:" AnchorPane.leftAnchor="163.0" AnchorPane.rightAnchor="161.0" AnchorPane.topAnchor="31.0">
       <font>
          <Font name="System Bold" size="14.0" />

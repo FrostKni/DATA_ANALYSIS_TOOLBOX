@@ -3,16 +3,18 @@ package Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import tech.tablesaw.api.CategoricalColumn;
 import tech.tablesaw.api.Table;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class onehotencoding_dialog {
+public class frequencyencoding_dialog {
 
     @FXML
     private Button buttonOK;
