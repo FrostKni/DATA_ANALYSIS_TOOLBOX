@@ -156,4 +156,14 @@ public class HistogramChart {
         return series1;
     }
 
+    public XYChart.Series<String,Number>create_imputation_variance_series(String[] columnNames,double[]  variance)
+    {
+        DecimalFormat df_obj = new DecimalFormat("#.##");
+        XYChart.Series <String,Number>series1 = new XYChart.Series<>();
+        for (int i = 0; i < columnNames.length; i++) {
+            series1.getData().add(new XYChart.Data<>(columnNames[i], variance[i]));
+        }
+        return series1;
+    }
+
 }

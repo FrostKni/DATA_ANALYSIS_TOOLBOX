@@ -59,6 +59,7 @@ public Table formation(Table data)
         }
         
         for(NumericColumn<?> column : numericColumns) {
+            column= (NumericColumn<?>) column.removeMissing();
             //mean
             mean.set(formation.column("Column Name").indexOf(column.name()), String.format("%.3f", column.mean()));
 

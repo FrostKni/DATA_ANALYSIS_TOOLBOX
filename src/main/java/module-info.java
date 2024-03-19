@@ -13,6 +13,17 @@ module org.analyze.main {
     requires tablesaw.core;
     requires java.desktop;
     requires javafx.swing;
+    requires org.apache.poi.ooxml;
+    requires org.apache.logging.log4j;
+    requires javafx.media;
+    requires  io.github.classgraph;
+    requires atlantafx.base;
+    requires  mysql.connector.j;
+    requires org.apache.poi.poi;
+    requires org.apache.poi.ooxml.schemas;
+    requires  org.apache.logging.log4j.core;
+    requires org.apache.logging.log4j.plugins;
+    requires java.sql;
 
     opens org.analyze.main to javafx.fxml;
     exports org.analyze.main;

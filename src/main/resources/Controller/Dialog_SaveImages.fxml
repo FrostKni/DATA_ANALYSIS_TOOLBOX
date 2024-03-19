@@ -37,23 +37,23 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Label layoutX="373.0" layoutY="97.0" text=".png">
+      <Label layoutX="388.0" layoutY="97.0" text=".png" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="97.0">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="373.0" layoutY="154.0" text=".png">
+      <Label layoutX="388.0" layoutY="212.0" text=".png" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="212.0">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="373.0" layoutY="212.0" prefHeight="0.0" prefWidth="29.0" text=".png">
+      <Label layoutX="388.0" layoutY="154.0" prefHeight="0.0" prefWidth="29.0" text=".png" AnchorPane.leftAnchor="388.0" AnchorPane.topAnchor="154.0">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
       <TextField fx:id="path" accessibleRole="TEXT_AREA" editable="false" layoutX="206.0" layoutY="37.0" AnchorPane.leftAnchor="206.0" AnchorPane.topAnchor="37.0" />
-      <Label layoutX="90.0" layoutY="40.0" text="Folder Path :">
+      <Label layoutX="90.0" layoutY="40.0" text="Folder Path :" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="40.0">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

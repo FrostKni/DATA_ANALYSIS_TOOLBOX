@@ -51,7 +51,6 @@ public class SLR {
                         }
                     }
                 }
-                System.out.println("The variable " + contVariNames[i] + " has maximum correlation with " + contVariNames[posi] + " with correlation value " + maxi);
 
                 // Calculating sum required for calculating slope and intercept
                 double variRows = 0, sumiOfX = 0, sumiOfY = 0, sumiOfXY = 0, sumiOfXSqr = 0;
@@ -77,11 +76,6 @@ public class SLR {
                         sumiOfXY += xval * yval;
                         sumiOfXSqr += xval * xval;
                 }
-
-                System.out.println("The sum of " + contVariNames[i] + " is " + sumiOfX);
-                System.out.println("The sum of " + contVariNames[posi] + " is " + sumiOfY);
-                System.out.println("The sum of " + contVariNames[posi] + "*" + contVariNames[i] + " is " + sumiOfXY);
-                System.out.println("The sum of " + contVariNames[posi] + "*" + contVariNames[posi] + " is " + sumiOfXSqr);
 
                 // Calculating slope and intercept
                 double slope = (variRows * sumiOfXY - sumiOfX * sumiOfY) / (variRows * sumiOfXSqr - sumiOfX * sumiOfX);
@@ -129,7 +123,7 @@ public class SLR {
                 }
             }
         }
-        return table;
+        return table;       
     }
 
 //    public static void main(String args[]) {

@@ -6,22 +6,21 @@ import Controller.Algorithms.Outlier.outlierDetectionUsingModifiedZscore;
 import Controller.Algorithms.Normalization.Normalization;
 import Controller.Algorithms.Outlier.outlierDetectionUsingZscore;
 import Controller.Algorithms.Transformation.Transformation;
+import Controller.Performance.Varience;
 import Controller.chart_operations.HistogramChart;
 import Controller.chart_operations.Scatter_Outlier;
 import Controller.chart_operations.Scatter_plot;
 import Table_Formation.Row_Indexer;
 import Table_Formation.Summary_Table;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.embed.swing.SwingFXUtils;
-import com.almasb.fxgl.entity.action.Action;
-import com.almasb.fxgl.profile.SaveFile;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.chart.*;
 
 
@@ -29,18 +28,24 @@ import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.transform.Transform;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import Table_Formation.ObservableTablesawRow;
+import javafx.util.Duration;
+import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import tech.tablesaw.api.Table;
 import javax.imageio.ImageIO;
-
+import javafx.scene.media.MediaPlayer;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 
 public class Descriptor {
     public static Table dataframe;
@@ -92,6 +97,9 @@ public class Descriptor {
 
 
     @FXML
+    private ProgressBar bar;
+
+    @FXML
     private Tab descriptor_tab;
 
     @FXML
@@ -119,9 +127,6 @@ public class Descriptor {
 
 
     @FXML
-    private Button outlier_graph;
-
-    @FXML
     private Button save_img;
 
     @FXML
@@ -142,6 +147,12 @@ public class Descriptor {
     @FXML
     private TextArea suggest;
 
+    @FXML
+    private BarChart<String,Number> imputation_graph;
+
+    @FXML
+    private MediaView media_play;
+
     private HistogramChart obj;
 
     private Scatter_Outlier obj_outlier;
@@ -149,6 +160,21 @@ public class Descriptor {
     private Scatter_plot obj_scatter;
 
     private Table result;
+
+
+   public Table row_remove_result;
+    public Table column_remove_result;
+    public Table mean_result;
+    public Table median_result;
+    public Table mode_result;
+    public Table min_result;
+    public Table max_result;
+    public Table knn_result;
+    public Table slr_result;
+
+    private double [] variance;
+    private String[]  column_names;
+
 
 
     int flag = 0;
@@ -167,9 +193,29 @@ public class Descriptor {
         return summary_tab;
     }
 
+    public void  initialize()
+    {
+        //loading  in media view
+        File file = new File("src/main/resources/Images/vecteezy_abstract_polygonal_space_with_dots_and_lines_motion_data.mp4");
+        javafx.scene.media.Media media = new javafx.scene.media.Media(file.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(true);
+        //play in loop
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        media_play.setMediaPlayer(mediaPlayer);
+        //fit the media view in the pane
+        media_play.fitWidthProperty().bind(((Pane) media_play.getParent()).widthProperty());
+
+    }
+
 
     public void tableView_loader(Table table, TableView<ObservableTablesawRow> view, int length) {
         view.setFixedCellSize(25);
+
+        if(table.rowCount()<length)
+        {
+            length=table.rowCount();
+        }
 //
 
         // Add columns dynamically based on Tablesaw columns
@@ -189,24 +235,24 @@ public class Descriptor {
     }
 
     @FXML
-    void Fileloader(MouseEvent event) {
+    void Fileloader(MouseEvent event) throws IOException {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Dialog_file_loading_choice.fxml"));
+        Parent root=  fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setTitle("Dataset Chooser ");
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
 
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open File");
-
-        File csvFile = fileChooser.showOpenDialog(new Stage());
-
-        if (csvFile != null) {
-            String location_of_file = csvFile.getPath();
-
-            String extension = location_of_file.substring(location_of_file.lastIndexOf(".") + 1);
-
-            if (extension.equals("csv")) {
-                dataframe = Table.read().csv(location_of_file);
-
+        //getting the parameters from the dialog box
+                Dialog_file_loading_choice control = fxmlLoader.getController();
+                dataframe =  control.getTable();
+                // indexing the dataframe
+                assert dataframe != null;
                 dataframe_with_index = new Row_Indexer().indexer(dataframe.copy());
-
 
                 //loading sample data table in tableview with 20 rows
                 tableView_loader(dataframe_with_index, sample_table, 20);
@@ -254,30 +300,39 @@ public class Descriptor {
                 add_report.setDisable(false);
                 save_img.setDisable(false);
 
-            }
-        } else {
-            //error pop up window
-            Stage popupStage = new Stage();
-            popupStage.initModality(Modality.APPLICATION_MODAL);
-            popupStage.initStyle(StageStyle.UTILITY);
-            popupStage.setTitle("Error");
-
-            // Create a label with the error message
-            Label label = new Label("Please select a csv file");
-
-            // Set up the layout for the pop-up
-            StackPane layout = new StackPane();
-            layout.getChildren().add(label);
-
-            // Set up the scene and attach it to the stage
-            Scene scene = new Scene(layout, 250, 150);
-            popupStage.setScene(scene);
-
-            // Show the pop-up window
-            popupStage.showAndWait();
-
-        }
-
+                //run algorithms in the background
+//                Thread thread = new Thread(() -> {
+//                    //run algorithms
+//
+//                    replace_central_tendency rep = new replace_central_tendency();
+//                    row_remove_result = new drop_row_column().drop_row(dataframe.copy());
+//                    column_remove_result = new drop_row_column().drop_column(dataframe.copy());
+//                    mean_result = rep.replace_mean(dataframe.copy());
+//                    median_result = rep.replace_median(dataframe.copy());
+//                    mode_result = rep.replace_mode(dataframe.copy());
+//                    min_result = new replace_global_constant_min_max().replace_minimum(dataframe.copy());
+//                    max_result = new replace_global_constant_min_max().replace_maximum(dataframe.copy());
+//                    KNN_simple knn = new KNN_simple();
+//                    knn_result = knn.KNN_imputation(dataframe.copy());
+//                    slr_result = SLR.fillMissingValuesUsingSLR(dataframe.copy());
+//
+//                    Varience  var  =  new Varience();
+//                    Varience car = new  Varience();
+//                    variance = new double[9];
+//                    column_names = new String[]{"Remove Rows", "Remove Columns", "Mean", "Median", "Mode", "Min", "Max", "KNN", "SLR"};
+//
+//                    variance[0]=  var.variance_calculate(row_remove_result);
+//                     variance[1]=  var.variance_calculate(column_remove_result);
+//                    variance[2] =  var.variance_calculate(mean_result);
+//                    variance[3] =  var.variance_calculate(median_result);
+//                    variance[4]=  var.variance_calculate(mode_result);
+//                    variance[5]=  var.variance_calculate(min_result);
+//                    variance[6]  =  var.variance_calculate(max_result);
+//                    variance[7]=  var.variance_calculate(knn_result);
+//                    variance[8] =  var.variance_calculate(slr_result);
+//
+//                });
+//                thread.start();
 
     }
 
@@ -744,7 +799,6 @@ case "Box-Cox Transformation"->{
         String method = outlier_detection.getValue();
         switch (method) {
             case "Standard Z-Score " -> {
-                outlier_graph.setDisable(false);
                 Table data = dataframe_with_index.copy();
                 result = new outlierDetectionUsingZscore().zscore(data);
                 tableView.getItems().clear();
@@ -758,7 +812,6 @@ case "Box-Cox Transformation"->{
 
             }
             case "Modified Z-Score" -> {
-                outlier_graph.setDisable(false);
                 Table data = dataframe_with_index.copy();
                 result = new outlierDetectionUsingModifiedZscore().modified_zscore(data);
                 tableView.getItems().clear();
@@ -769,7 +822,6 @@ case "Box-Cox Transformation"->{
                 suggest.setText(sugess);
             }
             case "IQR" -> {
-                outlier_graph.setDisable(false);
                 Table data = dataframe_with_index.copy();
                 result = new outlierDetectionUsingIQR().iqr(data);
                 tableView.getItems().clear();
@@ -791,13 +843,9 @@ case "Box-Cox Transformation"->{
                 outlier_main_label.setDisable(true);
                 outlier_secondary.setDisable(true);
                 outlier_detection.setDisable(true);
-                outlier_graph.setDisable(true);
                 check_outlier_handle.setDisable(true);
 
                 //enable missing value handling
-                imputation.setDisable(false);
-                imputation_label.setDisable(false);
-                check_imputation.setDisable(false);
                 if (!outlier_detection.getValue().equals("None of the above")) {
                     dataframe_with_index = result;
                 }
@@ -825,7 +873,6 @@ case "Box-Cox Transformation"->{
 
             check_outlier_handle.setSelected(false);
         }
-
     }
 
 
@@ -977,7 +1024,6 @@ case "Box-Cox Transformation"->{
 
         if(histogram_name!=null)
         {
-            //saving chats in jafafx
             WritableImage image = histogram.snapshot(null, null);
             File file = new File(path+"/"+histogram_name+".png");
             try {
@@ -1052,13 +1098,162 @@ case "Box-Cox Transformation"->{
 
     @FXML
     void start_explore(MouseEvent event) {
-        descriptor_tab.setDisable(false);
+        Timeline task = new Timeline(
+                new KeyFrame(
+                        Duration.ZERO,
+                        new KeyValue(bar.progressProperty(), 0)
+                ),
+                new KeyFrame(
+                        Duration.seconds(2),
+                        new KeyValue(bar.progressProperty(), 1)
+                )
+        );
+        task.playFromStart();
 
-        tabpane.getSelectionModel().select(descriptor_tab);
-
+        //switch when progress bar is complete
+        task.setOnFinished(e -> {
+            descriptor_tab.setDisable(false);
+            tabpane.getSelectionModel().select(descriptor_tab);
+        });
     }
 
 
+    @FXML
+    void imputation_variance_graph(MouseEvent event) {
+        XYChart.Series<String, Number> series = obj.create_imputation_variance_series(column_names, variance);
+        imputation_graph.getData().clear();
+        imputation_graph.setTitle("Algorithm Comparison");
+        imputation_graph.getXAxis().setLabel("ALGORITHMS");
+        imputation_graph.getYAxis().setLabel("VARIANCE");
+        imputation_graph.getData().add(series);
+        imputation_graph.setLegendVisible(false);
+
+        //Bins height  on hover  of the bar
+        int[] j = obj.getFrequency();
+        for (int i = 0; i < j.length; i++) {
+            XYChart.Data<String, Number> data = series.getData().get(i);
+            Tooltip.install(data.getNode(), new Tooltip("Average Variance: " + j[i]));
+        }
+    }
+
+
+    @FXML
+    void add_report_mouse_clicked(MouseEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Dialog_add_report.fxml"));
+        Parent root=  fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setTitle("Report  Parameters");
+        stage.setScene(new Scene(root));
+        stage.showAndWait();
+
+
+        //getting the parameters from the dialog box
+        DialogAddReport controller = fxmlLoader.getController();
+        String  sample_table_text = controller.getSample_table();
+        String  summary_table_text = controller.getSummary_table();
+        String  histogram_text = controller.getHistogram_plot();
+        String  scatter_text = controller.getScatter_plot();
+        String  outlier_text = controller.getOutlier_plot();
+        try( XWPFDocument document = new XWPFDocument()) {
+            FileOutputStream out = new FileOutputStream(new File("/home/frostknight/Desktop/Report.docx"));
+            XWPFParagraph paragraph = document.createParagraph();
+            XWPFRun run = paragraph.createRun();
+
+            //set  document margins
+            CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+            CTPageMar pageMar = sectPr.addNewPgMar();
+            pageMar.setLeft(BigInteger.valueOf(400L));
+            pageMar.setTop(BigInteger.valueOf(400L));
+            pageMar.setRight(BigInteger.valueOf(400L));
+            pageMar.setBottom(BigInteger.valueOf(400L));
+
+
+
+            run.setBold(true);
+            run.setFontSize(20);
+            run.setText("Report");
+            run.addBreak();
+            run.setBold(false);
+            run.setFontFamily("Times New Roman");
+            run.setFontSize(14);
+            run.addBreak();
+            run.setText("Sample Table");
+            run.addBreak();
+            run.setFontSize(12);
+            //set page layout to landscape
+//            CTSectPr sectPr1 = document.getDocument().getBody().addNewSectPr();
+//            CTPageSz pageSize = sectPr1.addNewPgSz();
+//            pageSize.setOrient(STPageOrientation.LANDSCAPE);
+//            pageSize.setW(BigInteger.valueOf(15940));
+//            pageSize.setH(BigInteger.valueOf(12240));
+
+            //create table  of  5 columns  and countinue the other columns in the 5 -5 column
+
+
+
+
+            Table table1 = summary_tab.copy();
+            String[]  columnNames  =  table1.columnNames().toArray(new String[0]);
+            XWPFTable table = document.createTable(table1.rowCount()+1, table1.columnCount());
+            for (int row = 0; row <=table1.rowCount(); row++) {
+                XWPFTableRow tableRow = table.getRow(row);
+                for (int col = 0; col < table1.columnCount(); col++) {
+                    XWPFTableCell cell = tableRow.getCell(col);
+                    if(row==0)
+                    {
+                        cell.setText(columnNames[col]);
+                    }
+                    else {
+                        if (table1.column(col).type().toString().equals("DOUBLE")) {
+                            cell.setText(String.valueOf(table1.get(row-1, col)));
+                        } else if (table1.column(col).type().toString().equals("INTEGER")) {
+                            cell.setText(String.valueOf(table1.get(row-1, col)));
+                        } else {
+                            cell.setText((String) table1.get(row-1, col));
+                        }
+                    }
+                }
+            }
+
+
+            run.setText(sample_table_text);
+            run.addBreak();
+            run.addBreak();
+            run.setText("Summary Table");
+            run.addBreak();
+            run.setText(summary_table_text);
+            run.addBreak();
+            run.addBreak();
+            run.setText("Histogram Plot");
+            run.addBreak();
+            run.setText(histogram_text);
+            run.addBreak();
+            run.addBreak();
+            run.setText("Scatter Plot");
+            run.addBreak();
+            run.setText(scatter_text);
+            run.addBreak();
+            run.addBreak();
+            run.setText("Outlier Plot");
+            run.addBreak();
+            run.setText(outlier_text);
+            run.addBreak();
+            run.addBreak();
+            document.write(out);
+            out.close();
+            loading_notify();
+
+
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
+    }
 
 
 }

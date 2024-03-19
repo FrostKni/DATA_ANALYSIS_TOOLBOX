@@ -29,6 +29,7 @@ public class Dialog_ScatterController {
         column.getItems().addAll(columnNames);
         column1.getItems().addAll(columnNames);
 
+
     }
 
     @FXML
