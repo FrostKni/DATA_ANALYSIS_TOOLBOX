@@ -22,7 +22,6 @@ module org.analyze.main {
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml.schemas;
     requires  org.apache.logging.log4j.core;
-    requires org.apache.logging.log4j.plugins;
     requires java.sql;
 
     opens org.analyze.main to javafx.fxml;

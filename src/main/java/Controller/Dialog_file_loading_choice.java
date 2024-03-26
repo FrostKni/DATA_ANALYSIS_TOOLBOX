@@ -142,35 +142,37 @@ public class Dialog_file_loading_choice {
 
                     DialogDatabaseTables dialogDatabaseTables = fxmlLoader.getController();
                   List<String> table_names = dialogDatabaseTables.getSelectedColumns();
-                  System.out.println(table_names);
+//                  System.out.println(table_names);
                   //
                   connection_mysql sq = new connection_mysql();
-                  for(int j=0;j<table_names.size();j++)
-                  {
-                        for (int k=0;k<table_names.size() && j!=k;k++)
-                        {
-                            ResultSet rs = sq.execute_query("SELECT column_name\n" +
-                                    "FROM information_schema.columns\n" +
-                                    "WHERE table_name = '"+table_names.get(j)+"'\n" +
-                                    "INTERSECT\n" +
-                                    "SELECT column_name\n" +
-                                    "FROM information_schema.columns\n" +
-                                    "WHERE table_name = '"+table_names.get(k)+"';");
-
-                            if(rs!=null)
-                            {
-                               rs.next();
-                                String column_name = rs.getString(1);
-                                        //get the join of the two tables
-                                ResultSet rs1 = sq.execute_query("SELECT * FROM "+table_names.get(j)+" JOIN "+table_names.get(k)+" ON "+table_names.get(j)+"."+column_name+"= "+table_names.get(k)+"."+column_name+";");
-                                //get the result set and convert it to a table
-                                Table table = Table.read().db(rs1,"school");
-                                System.out.println(table);
-                            }
-
-
-                        }
-                  }
+                  ResultSet rs = sq.execute_query("SELECT * FROM "+table_names.get(0)+";");
+                  table=Table.read().db(rs,"school");
+//                  for(int j=0;j<table_names.size();j++)
+//                  {
+//                        for (int k=0;k<table_names.size() && j!=k;k++)
+//                        {
+//                            ResultSet rs = sq.execute_query("SELECT column_name\n" +
+//                                    "FROM information_schema.columns\n" +
+//                                    "WHERE table_name = '"+table_names.get(j)+"'\n" +
+//                                    "INTERSECT\n" +
+//                                    "SELECT column_name\n" +
+//                                    "FROM information_schema.columns\n" +
+//                                    "WHERE table_name = '"+table_names.get(k)+"';");
+//
+//                            if(rs!=null)
+//                            {
+//                               rs.next();
+//                                String column_name = rs.getString(1);
+//                                        //get the join of the two tables
+//                                ResultSet rs1 = sq.execute_query("SELECT * FROM "+table_names.get(j)+" JOIN "+table_names.get(k)+" ON "+table_names.get(j)+"."+column_name+"= "+table_names.get(k)+"."+column_name+";");
+//                                //get the result set and convert it to a table
+//                                Table table = Table.read().db(rs1,"school");
+//                                System.out.println(table);
+//                            }
+//
+//
+//                        }
+//                  }
               }else {
                      label = new Label("Connection failed");
                     layout.getChildren().add(label);
@@ -178,7 +180,6 @@ public class Dialog_file_loading_choice {
                      popupStage.setScene(scene);
 
            }
-           popupStage.showAndWait();
 
        }
         Stage stage = (Stage) ok.getScene().getWindow();

@@ -280,5 +280,75 @@
                </children></AnchorPane>
       </content>
     </Tab>
+
+      <Tab text="Analyse">
+          <content>
+              <ScrollPane>
+                  <content>
+                      <AnchorPane>
+                          <children>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="897.5" prefWidth="1309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                  <children>
+                                      <SplitPane dividerPositions="0.29797979797979796" layoutX="347.0" layoutY="249.0" prefHeight="897.5" prefWidth="1309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <items>
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                                  <children>
+                                                      <SplitPane dividerPositions="0.6911024062674874" layoutX="97.0" layoutY="235.0" orientation="VERTICAL" prefHeight="895.5" prefWidth="386.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                          <items>
+                                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                                                  <children>
+                                                                      <Label layoutX="56.0" layoutY="87.0" text="Algorithm:">
+                                                                          <font>
+                                                                              <Font name="System Bold" size="14.0" />
+                                                                          </font>
+                                                                      </Label>
+                                                                      <ChoiceBox layoutX="134.0" layoutY="84.0" prefWidth="150.0" />
+                                                                      <Button layoutX="154.0" layoutY="162.0" mnemonicParsing="false" text="OK" />
+                                                                  </children>
+                                                              </AnchorPane>
+                                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                                                  <children>
+                                                                      <TextArea layoutX="107.0" layoutY="45.0" prefHeight="272.5" prefWidth="384.0" promptText="Performance Measures" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                  </children>
+                                                              </AnchorPane>
+                                                          </items>
+                                                      </SplitPane>
+                                                  </children>
+                                              </AnchorPane>
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                                  <children>
+                                                      <SplitPane dividerPositions="0.6922216004476777" layoutX="353.0" layoutY="392.0" orientation="VERTICAL" prefHeight="895.5" prefWidth="914.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                          <items>
+                                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                                                  <children>
+                                                                      <ScatterChart layoutX="68.0" layoutY="73.0" prefHeight="615.0" prefWidth="912.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                          <xAxis>
+                                                                              <CategoryAxis side="BOTTOM" />
+                                                                          </xAxis>
+                                                                          <yAxis>
+                                                                              <NumberAxis side="LEFT" />
+                                                                          </yAxis>
+                                                                      </ScatterChart>
+                                                                  </children>
+                                                              </AnchorPane>
+                                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                                                  <children>
+                                                                      <TextArea layoutX="133.0" layoutY="58.0" prefHeight="271.5" prefWidth="912.0" promptText="Results" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                  </children>
+                                                              </AnchorPane>
+                                                          </items>
+                                                      </SplitPane>
+                                                  </children>
+                                              </AnchorPane>
+                                          </items>
+                                      </SplitPane>
+                                  </children>
+                              </AnchorPane>
+                          </children>
+                      </AnchorPane>
+                  </content>
+              </ScrollPane>
+          </content>
+      </Tab>
   </tabs>
 </TabPane>

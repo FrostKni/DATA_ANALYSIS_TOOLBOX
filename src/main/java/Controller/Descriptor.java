@@ -39,6 +39,8 @@ import Table_Formation.ObservableTablesawRow;
 import javafx.util.Duration;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+import tech.tablesaw.api.NumberColumn;
+import tech.tablesaw.api.NumericColumn;
 import tech.tablesaw.api.Table;
 import javax.imageio.ImageIO;
 import javafx.scene.media.MediaPlayer;
@@ -250,6 +252,14 @@ public class Descriptor {
         //getting the parameters from the dialog box
                 Dialog_file_loading_choice control = fxmlLoader.getController();
                 dataframe =  control.getTable();
+                //Converting Float to Double column
+                NumericColumn<?>[] numericColumns = dataframe.numericColumns().toArray(new NumericColumn[0]);
+                for (NumericColumn<?> numericColumn : numericColumns) {
+                    if (numericColumn instanceof NumberColumn) {
+                        NumberColumn numberColumn = (NumberColumn) numericColumn;
+                        dataframe.replaceColumn(numericColumn.name(), numberColumn.asDoubleColumn());
+                    }
+                }
                 // indexing the dataframe
                 assert dataframe != null;
                 dataframe_with_index = new Row_Indexer().indexer(dataframe.copy());
